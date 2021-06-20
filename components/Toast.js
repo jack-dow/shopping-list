@@ -1,7 +1,8 @@
 import toast from 'react-hot-toast';
 import classNames from 'classnames';
 
-import { CheckCircleIcon, XIcon } from '@heroicons/react/outline';
+import { CloseIcon } from '@iconicicons/react';
+import { CheckCircleIcon } from '@heroicons/react/solid';
 import { Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
@@ -10,7 +11,7 @@ export default function Toast(config) {
   let { duration } = config;
 
   if (!duration) {
-    duration = 2000;
+    duration = 2500;
   }
 
   return toast.custom(
@@ -60,7 +61,7 @@ export default function Toast(config) {
                     onClick={() => toast.dismiss(t.id)}
                   >
                     <span className="sr-only">Close</span>
-                    <XIcon className="h-5 w-5" aria-hidden="true" />
+                    <CloseIcon className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
               </div>

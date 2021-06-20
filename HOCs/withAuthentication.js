@@ -13,7 +13,6 @@ const withAuthentication = (WrappedComponent) => {
       if (!user) {
         const currentUser = await getUser();
         if (!currentUser) {
-          // console.log('NO CURRENT USER!!!');
           router.push('/login');
         }
       }

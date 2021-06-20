@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import { useContext } from 'react';
-import { MoonIcon, SunIcon } from '@heroicons/react/outline';
+import { MoonIcon, SunIcon } from '@iconicicons/react';
 
 import { UserContext } from '../lib/UserContext';
-import { supabase } from '../utils/initSupabase';
+import { supabase } from '../lib/Store';
 
 export default function DarkModeToggle() {
   const { useDarkMode, setUseDarkMode } = useContext(UserContext);
