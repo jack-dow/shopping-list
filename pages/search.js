@@ -47,7 +47,7 @@ const Search = () => {
           </form>
         </div>
         <div className="space-y-4 flex-1 p-4 pb-12 bg-gray-100 rounded-t-3xl">
-          <div className="bg-white shadow h-full rounded-t-3xl p-4 divide-y divide-gray-100"></div>
+          <div className="bg-white shadow h-full rounded-t-3xl p-4 divide-y divide-gray-100" />
         </div>
       </div>
     </Layout>
