@@ -1,13 +1,14 @@
+/* eslint-disable react/no-array-index-key */
 import { TrashIcon, UserCircleIcon } from '@heroicons/react/outline';
 import { SearchIcon } from '@iconicicons/react';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { Transition } from '@headlessui/react';
 import classNames from 'classnames';
 
 import Layout from '../components/Layout';
 import Toast from '../components/Toast';
-import { deleteProduct, useStore } from '../lib/Store';
+import { addProduct, deleteProduct, useStore } from '../lib/Store';
 import Dropdown, { DropdownButton } from '../components/Dropdown';
 import { UserContext } from '../lib/UserContext';
 import withAuthentication from '../HOCs/withAuthentication';
@@ -17,15 +18,6 @@ const Home = () => {
   const { user, logout } = useContext(UserContext);
   const [searchValue, setSearchValue] = useState('');
   const { products } = useStore();
-  const [loadedProducts, setLoadedProducts] = useState(false);
-
-  useEffect(() => {
-    if (products) {
-      setLoadedProducts(true);
-    }
-  }, [products]);
-
-  if (!loadedProducts) return <div />;
 
   return (
     <Layout>
@@ -115,22 +107,56 @@ const Home = () => {
           </form>
         </div>
 
-        <div className="space-y-4 flex-1 p-4 pb-12 bg-gray-100 rounded-t-3xl">
-          <div className="bg-white shadow h-full rounded-t-3xl p-4 divide-y divide-gray-100">
-            {!loadedProducts || products?.length > 0 ? (
-              products?.map((product) => (
-                <Transition
-                  show
-                  enter="transition ease-in duration-300"
-                  enterFrom="opacity-0"
-                  enterTo="opacity-100"
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                  className="flex items-center justify-center py-2"
+        <div className="space-y-4 flex-1 p-4 pb-16 bg-gray-100 rounded-t-3xl">
+          <div className="bg-white shadow h-full rounded-t-3xl p-4">
+            {/* <Transition
+              show={!Array.isArray(products)}
+              appear
+              enter="transition ease-in duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition ease-in duration-150"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+              className="divide-y divide-gray-100"
+            >
+              {[...Array(6)].map((_, index) => (
+                <div
+                  key={index}
+                  className={classNames('py-2 flex items-center justify-center', {
+                    'pt-0': index === 0,
+                    'pb-0': index === 5,
+                  })}
+                >
+                  <div className="h-24 w-24 animate-pulse bg-gray-100" />
+                  <div className="pl-2 space-y-1 h-26 flex-1">
+                    <div className="w-10/12 bg-gray-300 animate-pulse h-4" />
+                    <div className="w-2/5 bg-gray-100 animate-pulse h-3" />
+                    <div className="w-1/4 bg-gray-300 animate-pulse h-4" />
+                  </div>
+                </div>
+              ))}
+            </Transition> */}
+
+            <Transition
+              show={products?.length > 0}
+              appear
+              enter="transition ease-in duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition ease-in duration-150"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              {products?.map((product, index) => (
+                <div
+                  className={classNames('py-2 flex items-center justify-center', {
+                    'pt-0': index === 0,
+                    'pb-0': index === products.length,
+                  })}
                   key={product.id}
                 >
-                  <div className="flex items-center justify-center overflow-hidden w-1/4">
+                  <div className="flex items-center justify-center overflow-hidden w-24 h-24">
                     <img src={product.image} alt={product.name} className="max-w-full max-h-full" />
                   </div>
 
@@ -151,16 +177,21 @@ const Home = () => {
                       type="button"
                       onClick={() => {
                         deleteProduct(product.stockcode);
-                        Toast({ text: `Removed "${product.name}" from the list` });
+                        Toast({
+                          title: `Removed "${product.name}" from the list.`,
+                          undo: () => addProduct(product),
+                        });
                       }}
                       className="text-red-600 border border-red-600 rounded-md p-1 hover:bg-red-600 hover:text-red-50 focus:bg-red-600 focus:text-red-50 focus:outline-none transition"
                     >
                       <TrashIcon className="w-5 h-5" />
                     </button>
                   </div>
-                </Transition>
-              ))
-            ) : (
+                </div>
+              ))}
+            </Transition>
+
+            {products?.length === 0 && (
               <div className="flex flex-col items-center">
                 <img src="/celebration.png" alt="Celebration art" className="pb-4" />
                 <h2 className="text-gray-900 text-2xl">The list is empty!</h2>

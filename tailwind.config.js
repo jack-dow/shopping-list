@@ -33,6 +33,7 @@ module.exports = {
       },
       spacing: {
         10.5: '2.625rem',
+        30: '7.5rem',
       },
       padding: {
         full: '100%',
