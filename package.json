@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@capacitor/android": "^3.0.2",
-    "@capacitor/cli": "^3.0.2",
-    "@capacitor/core": "^3.0.2",
     "@headlessui/react": "^1.2.0",
     "@heroicons/react": "^1.0.1",
     "@iconicicons/react": "^1.5.0",
