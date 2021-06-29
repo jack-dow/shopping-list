@@ -14,6 +14,7 @@ export default function Register() {
   const { useDarkMode, useQuery } = useContext(UserContext);
 
   const [fields, setFields] = useState({
+    name: '',
     email: '',
     password: '',
   });
@@ -22,9 +23,9 @@ export default function Register() {
   const [registrationError, setRegistrationError] = useState();
 
   const handleRegister = async (e) => {
-    const { email, password } = fields;
+    const { email, password, name } = fields;
 
-    if (email && password) {
+    if (email && password && name) {
       e.preventDefault();
 
       setIsProcessing(true);
@@ -52,6 +53,7 @@ export default function Register() {
               {
                 id: user.id,
                 email,
+                name,
                 darkMode: useDarkMode,
               },
             ])
@@ -86,40 +88,39 @@ export default function Register() {
 
       <div className="mt-8 w-full flex-1 flex">
         <div className="bg-white flex-1 dark:bg-true-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10 transition-colors">
-          <div className="sm:mx-auto sm:w-full sm:max-w-lg">
+          <div className="pb-4 sm:mx-auto sm:w-full sm:max-w-lg">
             <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-true-gray-50 transition-colors">
               Create your account
             </h2>
-            <p className="mt-2 pb-4 text-center text-sm text-gray-600 dark:text-true-gray-400 max-w transition-colors">
-              Existing account?
-              <Link href="/login">
-                <a
-                  href="/login"
-                  className="font-medium pl-1 text-light-blue-600 hover:text-light-blue-500 dark:hover:text-light-blue-600 hover:underline focus:outline-none foucs:underline transition-colors"
-                >
-                  Sign in instead
-                </a>
-              </Link>
-            </p>
           </div>
           <form className="space-y-4">
             {registrationError && (
               <p className="text-red-600 text-sm transition">{registrationError}</p>
             )}
-
-            <Input
-              label="Email"
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              value={fields.email}
-              onChange={handleChange}
-              showError={
-                registrationError === 'A user with this email address has already been registered'
-              }
-              required
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Name"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                value={fields.name}
+                onChange={handleChange}
+                required
+              />
+              <Input
+                label="Email"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={fields.email}
+                onChange={handleChange}
+                showError={
+                  registrationError === 'A user with this email address has already been registered'
+                }
+                required
+              />
+            </div>
 
             <Input
               label="Password"
@@ -169,6 +170,17 @@ export default function Register() {
                 Creat{isProcessing ? 'ing' : 'e'} account
               </button>
             </div>
+            <p className="mt-2 font-medium text-center text-sm text-gray-600 dark:text-true-gray-400 max-w transition-colors">
+              Existing account?
+              <Link href="/login">
+                <a
+                  href="/login"
+                  className="font-semibold pl-1 text-light-blue-600 hover:text-light-blue-500 dark:hover:text-light-blue-600 hover:underline focus:outline-none foucs:underline transition-colors"
+                >
+                  Sign in instead
+                </a>
+              </Link>
+            </p>
           </form>
         </div>
       </div>

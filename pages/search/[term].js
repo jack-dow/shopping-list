@@ -13,7 +13,6 @@ import { useEffect, useState, Fragment } from 'react';
 import { Transition } from '@headlessui/react';
 
 import Layout from '../../components/Layout';
-import Toast from '../../components/Toast';
 
 import { addProduct, deleteProduct, fetchProducts } from '../../lib/Store';
 
@@ -229,11 +228,18 @@ const SearchTerm = ({ term: initialTerm }) => {
   );
 };
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   const { term } = context.params;
 
   return {
     props: { term }, // will be passed to the page component as props
+  };
+}
+
+export function getStaticPaths() {
+  return {
+    paths: [], // indicates that no page needs be created at build time
+    fallback: true, // indicates the type of fallback
   };
 }
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import Input from '../components/Input';
 import { supabase } from '../lib/Store';
@@ -123,6 +124,17 @@ export default function Login() {
               )}
               {!isProcessing ? 'Continue' : 'Signing you in'}
             </button>
+            <p className="mt-2 font-medium text-center text-sm text-gray-600 dark:text-true-gray-400 max-w transition-colors">
+              Don&apos;t have an account?
+              <Link href="/register">
+                <a
+                  href="/register"
+                  className="font-semibold pl-1 text-light-blue-600 hover:text-light-blue-500 dark:hover:text-light-blue-600 hover:underline focus:outline-none foucs:underline transition-colors"
+                >
+                  Register here
+                </a>
+              </Link>
+            </p>
           </form>
           {/* <div className="mt-6">
               <div className="relative">

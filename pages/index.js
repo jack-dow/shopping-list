@@ -2,7 +2,7 @@
 import { TrashIcon, UserCircleIcon } from '@heroicons/react/outline';
 import { SearchIcon } from '@iconicicons/react';
 import { useRouter } from 'next/router';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Transition } from '@headlessui/react';
 import classNames from 'classnames';
 
@@ -19,6 +19,8 @@ const Home = () => {
   const [searchValue, setSearchValue] = useState('');
   const { products } = useStore();
 
+  const names = [user.name, ...user.nicknames];
+
   return (
     <Layout>
       <div className="pt-4 h-full flex flex-col bg-light-blue-600">
@@ -29,9 +31,7 @@ const Home = () => {
               <div className="truncate">
                 <p className="font-medium text-gray-200 leading-3">G&apos;Day</p>
                 <p className="text-3xl font-bold text-white sm:text-2xl truncate">
-                  {user.nicknames?.length > 0
-                    ? user.nicknames[Math.floor(Math.random() * user.nicknames.length)]
-                    : user.email}
+                  {names[Math.floor(Math.random() * names.length)]}
                 </p>
               </div>
             </div>
