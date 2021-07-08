@@ -23,7 +23,7 @@ function Settings() {
             </div>
           </div>
         </div>
-        <div className="flex justify-betweem">
+        <div className="w-full flex justify-between">
           <button
             type="button"
             onClick={() => logout()}

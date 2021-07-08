@@ -127,12 +127,8 @@ const Home = () => {
         </Transition>
         {products?.length === 0 && (
           <div className="pt-3 flex flex-col items-center justify-center">
-            <div className="w-4/5 flex items-center justify-center mx-auto">
-              <img
-                src="/celebration.svg"
-                alt="Drawing of two beers clinking"
-                className="max-w-full max-h-full w-full h-full"
-              />
+            <div className="flex items-center justify-center mx-auto">
+              <img src="/celebration.svg" alt="Drawing of two beers clinking" className="h-72" />
             </div>
             <div>
               <p className="mt-8 text-center text-2xl leading-8 font-semibold tracking-tight text-gray-900 sm:text-4xl">

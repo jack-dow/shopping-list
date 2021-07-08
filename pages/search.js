@@ -40,7 +40,7 @@ const Search = () => {
 
                 <input
                   type="text"
-                  className="shadow-sm border-none py-4 pl-10 bg-white rounded-lg w-full text-gray-600 focus:ring-2 focus:ring-light-blue-600 dark:focus:border-light-blue-700 transition"
+                  className="shadow-sm border-none py-4 pl-10 bg-white rounded-lg w-full text-gray-600 focus:ring-2 focus:ring-sky-600 transition"
                   placeholder="Search"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
@@ -50,12 +50,8 @@ const Search = () => {
           </form>
         </div>
         <div className="pt-3 flex flex-col items-center space-y-8">
-          <div className="w-2/3 flex items-center justify-center mx-auto">
-            <img
-              src="/search.svg"
-              alt="Drawing a detective searching a phone"
-              className="max-w-full max-h-full w-full h-full"
-            />
+          <div className="flex items-center justify-center mx-auto">
+            <img src="/search.svg" alt="Drawing a detective searching a phone" className="h-72" />
           </div>
           <div className="relative">
             <p className="text-center text-2xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">

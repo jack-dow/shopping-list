@@ -7,8 +7,8 @@ import { SearchIcon, HomeIcon, UserIcon, ClipboardIcon } from '@iconicicons/reac
 
 export default function Layout({ title, children, contentMaxWidth }) {
   return (
-    <div className="w-screen h-screen bg-gray-100 dark:bg-true-gray-900 relative transition-colors">
-      <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-true-gray-900 transition-colors">
+    <div className="w-screen h-screen bg-gray-100  relative transition-colors">
+      <div className="h-screen flex overflow-hidden bg-gray-100  transition-colors">
         <div className="flex flex-col w-0 flex-1 overflow-hidden">
           {/* Content */}
           <main
@@ -31,7 +31,7 @@ export default function Layout({ title, children, contentMaxWidth }) {
               >
                 {children || (
                   <div className="py-4">
-                    <div className="border-4 border-dashed border-gray-200 dark:border-true-gray-400 rounded-lg h-96" />
+                    <div className="border-4 border-dashed border-gray-200  rounded-lg h-96" />
                   </div>
                 )}
               </div>

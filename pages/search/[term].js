@@ -92,7 +92,7 @@ const SearchTerm = ({ term: initialTerm }) => {
 
                 <input
                   type="text"
-                  className="shadow-sm border-none py-4 pl-10 bg-white rounded-lg w-full text-gray-600 focus:ring-2 focus:ring-sky-600 dark:focus:border-sky-700 transition"
+                  className="shadow-sm border-none py-4 pl-10 bg-white rounded-lg w-full text-gray-600 focus:ring-2 focus:ring-sky-600 transition"
                   placeholder="Search"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
@@ -169,12 +169,8 @@ const SearchTerm = ({ term: initialTerm }) => {
       </div>
       {products?.length === 0 && (
         <div className="pt-3 flex flex-col items-center space-y-8">
-          <div className="w-3/5 flex items-center justify-center mx-auto">
-            <img
-              src="/empty.svg"
-              alt="Drawing of man holding an empty box"
-              className="max-w-full max-h-full w-full h-full"
-            />
+          <div className="flex items-center justify-center mx-auto">
+            <img src="/empty.svg" alt="Drawing of man holding an empty box" className="h-52" />
           </div>
           <div className="relative mx-6">
             <p className="text-center text-2xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">

@@ -1,8 +1,8 @@
 {
-  "name": "TKIT Shopping List",
-  "short_name": "TKIT Shopping",
-  "theme_color": "#0284C7",
-  "background_color": "#F3F4F6",
+  "name": "Shopping List",
+  "short_name": "Shopping List",
+  "theme_color": "#F4F4F5",
+  "background_color": "#000000",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
