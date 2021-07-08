@@ -20,7 +20,6 @@ class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#0284C7" />
           <meta name="msapplication-tap-highlight" content="no" />
           <meta name="theme-color" content="#F4F4F5" />
-          <meta name="theme-color" content="#000000" />
           <link href="/icons/icon-16x16.png" rel="icon" type="image/png" sizes="16x16" />
           <link href="/icons/icon-32x32.png" rel="icon" type="image/png" sizes="32x32" />
           <link rel="manifest" href="/manifest.json" />
