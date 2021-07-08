@@ -87,7 +87,7 @@ export default function Input({
               'pr-10': iconTrailing,
               'pl-6 pr-12 ': price,
               'border-red-600 focus:border-red-600 focus:ring-red-600': showError,
-              'border-gray-300 dark:border-true-gray-600 focus:border-transparent focus:ring-light-blue-600 dark:focus:border-light-blue-700':
+              'border-gray-300 dark:border-true-gray-600 focus:border-transparent focus:ring-sky-600 dark:focus:border-sky-700':
                 !showError,
             }
           )}

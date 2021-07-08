@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { NextSeo } from 'next-seo';
 
 import Input from '../components/Input';
 import { supabase } from '../lib/Store';
@@ -45,12 +46,17 @@ export default function Login() {
 
   return (
     <div className="relative flex flex-col items-center min-h-screen shadow bg-gray-50 dark:bg-true-gray-900 overflow-hidden sm:px-6 lg:px-8 transition">
+      <NextSeo title="Login | TKIT Shopping List" />
       <div className="absolute top-6 right-10">
         <DarkModeToggle />
       </div>
       <div className="max-w-md h-1/4 p-8 pt-16 flex justify-center items-center">
         <div className="w-3/4">
-          <img src="/login.svg" alt="Man entering door" className="max-w-full max-h-full" />
+          <img
+            src="/login.svg"
+            alt="Man entering door"
+            className="max-w-full max-h-full w-full h-full"
+          />
         </div>
       </div>
       <div className="max-w-md mt-8 w-full flex-1 flex">
@@ -93,9 +99,9 @@ export default function Login() {
               onClick={handleLogin}
               disabled={isProcessing}
               className={classNames(
-                'group relative w-full flex items-center justify-center py-3 px-5 border border-transparent text-base font-medium rounded-md text-white bg-light-blue-700 hover:bg-light-blue-800 focus:outline-none focus:ring-2 focus:ring-light-blue-600 dark:focus:ring-light-blue-700  transition',
+                'group relative w-full flex items-center justify-center py-3 px-5 border border-transparent text-base font-medium rounded-md text-white bg-sky-700 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-600 dark:focus:ring-sky-700  transition',
                 {
-                  'disabled:opacity-80 disabled:bg-light-blue-700 disabled:cursor-not-allowed':
+                  'disabled:opacity-80 disabled:bg-sky-700 disabled:cursor-not-allowed':
                     isProcessing,
                 }
               )}
@@ -129,7 +135,7 @@ export default function Login() {
               <Link href="/register">
                 <a
                   href="/register"
-                  className="font-semibold pl-1 text-light-blue-600 hover:text-light-blue-500 dark:hover:text-light-blue-600 hover:underline focus:outline-none foucs:underline transition-colors"
+                  className="font-semibold pl-1 text-sky-600 hover:text-sky-500 dark:hover:text-sky-600 hover:underline focus:outline-none foucs:underline transition-colors"
                 >
                   Register here
                 </a>

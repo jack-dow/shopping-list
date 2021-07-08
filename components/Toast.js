@@ -64,7 +64,7 @@ export default function Toast(config) {
                         undo();
                         toast.dismiss(t.id);
                       }}
-                      className="ml-3 flex-shrink-0 bg-white rounded-md text-sm font-medium text-light-blue-600 hover:text-light-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-light-blue-600"
+                      className="ml-3 flex-shrink-0 bg-white rounded-md text-sm font-medium text-sky-600 hover:text-sky-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-600"
                     >
                       Undo
                     </button>
@@ -72,7 +72,7 @@ export default function Toast(config) {
                   <div className="ml-4 flex-shrink-0 flex">
                     <button
                       type="button"
-                      className=" rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:ring-offset-true-gray-800 focus:ring-light-blue-600 dark:focus:ring-light-blue-700 transition"
+                      className=" rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:ring-offset-true-gray-800 focus:ring-sky-600 dark:focus:ring-sky-700 transition"
                       onClick={() => toast.dismiss(t.id)}
                     >
                       <span className="sr-only">Close</span>

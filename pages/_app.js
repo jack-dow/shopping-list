@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import toast, { Toaster, useToasterStore } from 'react-hot-toast';
+import { DefaultSeo } from 'next-seo';
 
 import { UserProvider } from '../lib/UserContext';
 
@@ -15,6 +16,14 @@ function MyApp({ Component, pageProps }) {
   }, [toasts]);
   return (
     <UserProvider>
+      <DefaultSeo
+        openGraph={{
+          type: 'website',
+          locale: 'en_IE',
+          url: 'https://www.shopping.tkit.tech/',
+          site_name: 'TKIT Shopping List',
+        }}
+      />
       <Component {...pageProps} />
       <Toaster />
     </UserProvider>

@@ -26,7 +26,7 @@ export default function DarkModeToggle() {
         window.localStorage.setItem('darkMode', !useDarkMode);
         setUseDarkMode(!useDarkMode);
       }}
-      className="bg-gray-200 relative inline-flex flex-shrink-0 h-7 w-14 border-2 border-transparent rounded-full cursor-pointer transition ease-in-out dark:ring-offset-true-gray-900 duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-light-blue-700 dark:focus:ring-light-blue-700 dark:bg-true-gray-700"
+      className="bg-gray-200 relative inline-flex flex-shrink-0 h-7 w-14 border-2 border-transparent rounded-full cursor-pointer transition ease-in-out dark:ring-offset-true-gray-900 duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-700 dark:focus:ring-sky-700 dark:bg-true-gray-700"
       aria-pressed="false"
     >
       <span className="sr-only">Toggle Darkmode</span>
@@ -50,7 +50,7 @@ export default function DarkModeToggle() {
           )}
           aria-hidden="true"
         >
-          <SunIcon className="h-3 w-3 text-light-blue-700" />
+          <SunIcon className="h-3 w-3 text-sky-700" />
         </span>
         {/* <!-- Enabled: "opacity-100 ease-in duration-200", Not Enabled: "opacity-0 ease-out duration-100" --> */}
         <span

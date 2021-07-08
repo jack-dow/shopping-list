@@ -2,17 +2,17 @@
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { SearchIcon, FileTextIcon, BookIcon } from '@iconicicons/react';
+
+import { SearchIcon, HomeIcon, UserIcon, ClipboardIcon } from '@iconicicons/react';
 
 export default function Layout({ title, children, contentMaxWidth }) {
-  const router = useRouter();
   return (
-    <div className="w-screen h-screen bg-gray-50 dark:bg-true-gray-900 relative transition-colors">
-      <div className="h-screen flex overflow-hidden bg-gray-50 dark:bg-true-gray-900 transition-colors">
+    <div className="w-screen h-screen bg-gray-100 dark:bg-true-gray-900 relative transition-colors">
+      <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-true-gray-900 transition-colors">
         <div className="flex flex-col w-0 flex-1 overflow-hidden">
           {/* Content */}
           <main
-            className="flex flex-col flex-1 relative overflow-y-auto focus:outline-none"
+            className="flex flex-col flex-1 relative overflow-y-auto pb-16 focus:outline-none"
             tabIndex="0"
           >
             <div className="flex flex-col flex-1">
@@ -37,63 +37,69 @@ export default function Layout({ title, children, contentMaxWidth }) {
               </div>
             </div>
           </main>
-          <div className="fixed bottom-0 w-full z-20 flex-shrink-0 flex justify-evenly items-center h-16 bg-white shadow-bottom-nav transition-colors">
-            <div>
-              <BottomNavButton href="/search">
-                <SearchIcon className="w-8 h-8" />
-                Search
-              </BottomNavButton>
-            </div>
-            <div className="pb-7">
-              <Link href="/" shallow>
-                <a
-                  href="/"
-                  className={classNames(
-                    'flex border-8 rounded-full p-4 focus:outline-none focus:bg-white focus:text-light-blue-600 focus:border-light-blue-600 transition duration-300',
-                    {
-                      'bg-white text-light-blue-600 border-light-blue-600': router.asPath === '/',
-                      'bg-light-blue-600 text-white border-transparent': router.asPath !== '/',
-                    }
-                  )}
-                >
-                  <FileTextIcon className="w-8 h-8" />
-                </a>
-              </Link>
-            </div>
-            <div>
-              <BottomNavButton href="/recipes" disabled>
-                <BookIcon className="w-8 h-8" />
-                Recipes
-              </BottomNavButton>
-            </div>
-          </div>
+          <nav className="fixed bottom-0 w-full z-20 flex-shrink-0 px-4 py-2 flex justify-between items-center bg-gray-100">
+            <BottomNavButton href="/" title="Home">
+              <HomeIcon className="w-8 h-8" />
+            </BottomNavButton>
+            <BottomNavButton href="/search" title="Search">
+              <SearchIcon className="w-8 h-8" />
+            </BottomNavButton>
+            <BottomNavButton href="/history" title="History">
+              <ClipboardIcon className="w-8 h-8" />
+            </BottomNavButton>
+            <BottomNavButton href="/settings" title="Profile">
+              <UserIcon className="w-8 h-8" />
+            </BottomNavButton>
+          </nav>
         </div>
       </div>
     </div>
   );
 }
 
-const BottomNavButton = ({ children, href, as, disabled }) => {
+const BottomNavButton = ({ children, href, title, disabled }) => {
   const router = useRouter();
 
   const isActive =
     (href === '/' && href === router.asPath) || (href !== '/' && router.asPath.startsWith(href));
 
   return (
-    <Link href={href} as={as} shallow>
+    <Link href={href} shallow>
       <a
         href={href}
-        disabled={disabled}
         className={classNames(
-          'flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-transparent text-gray-700 focus:outline-none focus:bg-light-blue-100 focus:text-light-blue-800 transition',
+          'group flex relative items-center text-sm font-medium bg-transparent focus:outline-none transition-all transform',
           {
-            'bg-light-blue-100 text-light-blue-800': isActive,
-            'text-gray-700': !isActive,
+            'text-gray-400': !isActive,
             'opacity-50 pointer-events-none': disabled,
           }
         )}
       >
-        {children}
+        <div
+          className={classNames(
+            'rounded-2xl transition flex flex-col items-center justify-center',
+            {
+              'text-sky-600 ': isActive,
+            }
+          )}
+        >
+          {children}
+          <div>{title}</div>
+        </div>
+        {/* 
+        <Transition
+          show={isActive}
+          appear
+          enter="transition ease-in duration-150"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          className="text-sky-600"
+        >
+          {title}
+        </Transition> */}
       </a>
     </Link>
   );
