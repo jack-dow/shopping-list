@@ -17,11 +17,13 @@ import Layout from '../../components/Layout';
 import { addProduct, deleteProduct, fetchProducts } from '../../lib/Store';
 import withAuthentication from '../../HOCs/withAuthentication';
 
-const SearchTerm = ({ term: initialTerm }) => {
+const SearchTerm = () => {
   const router = useRouter();
 
+  const { initialTerm } = router.query;
+
   const [products, setProducts] = useState();
-  const [term, setTerm] = useState(initialTerm);
+  const [term, setTerm] = useState(initialTerm || '');
   const [currentPage, setCurrentPage] = useState(1);
   const [numOfPages, setNumOfPages] = useState(1);
 
@@ -43,9 +45,13 @@ const SearchTerm = ({ term: initialTerm }) => {
 
   useEffect(() => {
     fetchProducts(setShoppingList);
-
-    fetchResults(term);
   }, []);
+
+  useEffect(() => {
+    if (initialTerm) {
+      fetchResults(initialTerm);
+    }
+  }, [initialTerm]);
 
   useEffect(() => {
     setProducts();
@@ -230,21 +236,6 @@ const SearchTerm = ({ term: initialTerm }) => {
     </Layout>
   );
 };
-
-export async function getStaticProps(context) {
-  const { term } = context.params;
-
-  return {
-    props: { term }, // will be passed to the page component as props
-  };
-}
-
-export function getStaticPaths() {
-  return {
-    paths: [], // indicates that no page needs be created at build time
-    fallback: true, // indicates the type of fallback
-  };
-}
 
 export default withAuthentication(SearchTerm);
 
