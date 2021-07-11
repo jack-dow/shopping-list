@@ -42,7 +42,7 @@ const Home = () => {
             className="w-full flex pb-4"
             onSubmit={(e) => {
               e.preventDefault();
-              router.push('/search/[term]', `/search/${searchValue}`, { shallow: true });
+              router.push(`/search/${searchValue}`);
             }}
           >
             <label htmlFor="search_field" className="sr-only">
@@ -65,6 +65,39 @@ const Home = () => {
             </div>
           </form>
         </div>
+        <Transition
+          appear
+          show={products == null}
+          enter="transition ease-in duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          className="space-y-3 pb-3"
+        >
+          {[...Array(6)].map((_, index) => (
+            <div
+              key={index}
+              className={classNames(
+                'p-3 rounded-2xl bg-white shadow flex items-center justify-center'
+              )}
+            >
+              <div className="animate-pulse bg-gray-100 mx-auto w-24 h-24" />
+              <div className="flex flex-col flex-1 pl-3">
+                <div className="w-10/12 bg-gray-300 animate-pulse h-4 mb-2" />
+                <div className="flex justify-between items-center">
+                  <div className="flex-1">
+                    <div className="w-1/2 bg-gray-100 animate-pulse h-3 mb-2" />
+                    <div className="w-1/3 bg-gray-300 animate-pulse h-4" />
+                  </div>
+                  <div className="w-8 h-8 bg-gray-300 animate-pulse rounded-md" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </Transition>
+
         <Transition
           show={products?.length > 0}
           appear

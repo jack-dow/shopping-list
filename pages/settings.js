@@ -5,7 +5,6 @@ import { NextSeo } from 'next-seo';
 import Layout from '../components/Layout';
 import withAuthentication from '../HOCs/withAuthentication';
 import { UserContext } from '../lib/UserContext';
-import DarkModeToggle from '../components/DarkModeToggle';
 
 function Settings() {
   const { user, logout } = useContext(UserContext);
@@ -31,7 +30,6 @@ function Settings() {
           >
             Logout
           </button>
-          <DarkModeToggle />
         </div>
       </div>
     </Layout>

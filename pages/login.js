@@ -6,7 +6,6 @@ import { NextSeo } from 'next-seo';
 
 import Input from '../components/Input';
 import { supabase } from '../lib/Store';
-import DarkModeToggle from '../components/DarkModeToggle';
 
 export default function Login() {
   const router = useRouter();
@@ -47,9 +46,9 @@ export default function Login() {
   return (
     <div className="relative flex flex-col items-center min-h-screen shadow bg-gray-50 dark:bg-true-gray-900 overflow-hidden sm:px-6 lg:px-8 transition">
       <NextSeo title="Login | TKIT Shopping List" />
-      <div className="absolute top-6 right-10">
+      {/* <div className="absolute top-6 right-10">
         <DarkModeToggle />
-      </div>
+      </div> */}
       <div className="max-w-md h-1/4 p-8 pt-16 flex justify-center items-center">
         <div className="w-3/4">
           <img

@@ -64,7 +64,7 @@ const BottomNavButton = ({ children, href, title, disabled }) => {
     (href === '/' && href === router.asPath) || (href !== '/' && router.asPath.startsWith(href));
 
   return (
-    <Link href={href} shallow>
+    <Link href={href}>
       <a
         href={href}
         className={classNames(

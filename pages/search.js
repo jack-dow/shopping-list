@@ -26,7 +26,7 @@ const Search = () => {
             className="w-full flex pb-4"
             onSubmit={(e) => {
               e.preventDefault();
-              router.push('/search/[term]', `/search/${searchValue}`, { shallow: true });
+              router.push(`/search/${searchValue}`);
             }}
           >
             <label htmlFor="search_field" className="sr-only">

@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from 'react';
 import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/solid';
 import dayjs from 'dayjs';
 import { NextSeo } from 'next-seo';
+import classNames from 'classnames';
+import { Transition } from '@headlessui/react';
 
 import { fetchHistory, fetchUsers } from '../lib/Store';
 import Layout from '../components/Layout';
@@ -32,12 +34,21 @@ function History() {
             </div>
           </div>
         </div>
-        {history == null &&
-          [...Array(3)].map((_, index) => (
+        <Transition
+          appear
+          show={history == null}
+          enter="transition ease-in duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          {[...Array(3)].map((_, index) => (
             <div key={index + 15}>
               <div className="w-3/12 h-4 bg-gray-300 animate-pulse mb-3" />
               {[...Array(4)].map((__, historyIndex) => (
-                <div className="relative pb-10" key={historyIndex}>
+                <div className="relative pb-7" key={historyIndex}>
                   {historyIndex !== 3 ? (
                     <span
                       className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
@@ -45,21 +56,6 @@ function History() {
                     />
                   ) : null}
                   <div className="relative flex space-x-3">
-                    {/* <span
-              className={classNames(
-                'h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white',
-                {
-                  'bg-red-600': event.event === 'delete',
-                  'bg-sky-600': event.event === 'create',
-                }
-              )}
-            >
-              {event.event === 'delete' ? (
-                <XIcon className="h-5 w-5 text-white" aria-hidden="true" />
-              ) : (
-                <CheckIcon className="h-5 w-5 text-white" aria-hidden="true" />
-              )}
-            </span> */}
                     <div className="h-8 w-8 bg-gray-300 rounded-full ring-8 ring-gray-100 flex items-center justify-center animate-pulse" />
 
                     <div className="flex flex-1 flex-col">
@@ -73,7 +69,17 @@ function History() {
               ))}
             </div>
           ))}
-        {history?.length === 0 && (
+        </Transition>
+        <Transition
+          appear
+          show={history?.length === 0}
+          enter="transition ease-in duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="pt-3 flex flex-col items-center space-y-8">
             <div className="w-4/5 flex items-center justify-center mx-auto">
               <img
@@ -91,36 +97,53 @@ function History() {
               </p>
             </div>
           </div>
-        )}
-        {history?.map((event) => {
-          let date;
+        </Transition>
+        <Transition
+          appear
+          show={history?.length > 0}
+          enter="transition ease-in duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          {history?.map((event, index) => {
+            let date;
 
-          if (event.date === dayjs().format('MM-DD-YYYY')) {
-            date = 'Today';
-          } else if (event.date === dayjs().subtract(1, 'day').format('MM-DD-YYYY')) {
-            date = 'Yesterday';
-          } else {
-            date = dayjs(event.date).format('MMMM D');
-          }
+            if (event.date === dayjs().format('MM-DD-YYYY')) {
+              date = 'Today';
+            } else if (event.date === dayjs().subtract(1, 'day').format('MM-DD-YYYY')) {
+              date = 'Yesterday';
+            } else {
+              date = dayjs(event.date).format('MMMM D');
+            }
 
-          return (
-            <div className="flow-root" key={event.date}>
-              <p className="pb-3 font-medium">{date}</p>
-              <ul className="-mb-8">
-                {event.history?.map((singleEvent, eventIdx) => (
-                  <HistoryEvent
-                    key={singleEvent.id}
-                    eventIdx={eventIdx}
-                    history={event.history}
-                    event={singleEvent}
-                    user={user}
-                    users={allUsers}
-                  />
-                ))}
-              </ul>
-            </div>
-          );
-        })}
+            return (
+              <div className="flow-root" key={event.date}>
+                <p
+                  className={classNames('pb-3 font-medium', {
+                    'pt-3': index > 0,
+                  })}
+                >
+                  {date}
+                </p>
+                <ul className="-mb-8">
+                  {event.history?.map((singleEvent, eventIdx) => (
+                    <HistoryEvent
+                      key={singleEvent.id}
+                      eventIdx={eventIdx}
+                      history={event.history}
+                      event={singleEvent}
+                      user={user}
+                      users={allUsers}
+                    />
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </Transition>
       </div>
     </Layout>
   );
@@ -141,7 +164,7 @@ function HistoryEvent({ event, eventIdx, history, user, users }) {
 
   return (
     <li key={event.id}>
-      <div className="relative pb-10">
+      <div className="relative pb-7">
         {eventIdx !== history.length - 1 ? (
           <span
             className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"

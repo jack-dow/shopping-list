@@ -28,28 +28,9 @@ const SearchTerm = ({ term: initialTerm }) => {
   const [shoppingList, setShoppingList] = useState([]);
   const [searchValue, setSearchValue] = useState('');
 
-  useEffect(async () => {
-    fetchProducts(setShoppingList);
-    if (!products) {
-      const { data } = await axios.get(
-        `https://www.woolworths.com.au/apis/ui/Search/products?searchTerm=${term}&pageSize=12`
-      );
-
-      if (data.Products) {
-        setNumOfPages(Math.ceil(data.SearchResultsCount / 12));
-        setProducts(data.Products);
-      } else {
-        setProducts([]);
-      }
-    }
-  }, []);
-
-  useEffect(async () => {
-    setProducts();
-    setCurrentPage(1);
-    setTerm(router.query.term);
+  async function fetchResults(searchTerm) {
     const { data } = await axios.get(
-      `https://www.woolworths.com.au/apis/ui/Search/products?searchTerm=${router.query.term}&pageSize=12`
+      `https://www.woolworths.com.au/apis/ui/Search/products?searchTerm=${searchTerm}&pageSize=12`
     );
     if (data.Products) {
       setNumOfPages(Math.ceil(data.SearchResultsCount / 12));
@@ -57,6 +38,20 @@ const SearchTerm = ({ term: initialTerm }) => {
     } else {
       setProducts([]);
     }
+    return data;
+  }
+
+  useEffect(() => {
+    fetchProducts(setShoppingList);
+
+    fetchResults(term);
+  }, []);
+
+  useEffect(() => {
+    setProducts();
+    setCurrentPage(1);
+    setTerm(router.query.term);
+    fetchResults(router.query.term);
   }, [router.query.term]);
 
   return (
@@ -78,7 +73,7 @@ const SearchTerm = ({ term: initialTerm }) => {
             className="w-full flex pb-4"
             onSubmit={(e) => {
               e.preventDefault();
-              router.push('/search/[term]', `/search/${searchValue}`, { shallow: true });
+              router.push(`/search/${searchValue}`);
             }}
           >
             <label htmlFor="search_field" className="sr-only">
@@ -284,7 +279,7 @@ const Product = ({ product, shoppingList, setShoppingList }) => {
         </Fragment>
       )}
       <div className="flex items-center justify-center">
-        <img src={product.SmallImageFile} alt={product.Name} />
+        <img src={product.SmallImageFile} alt={product.Name} className="w-30 h-30" />
       </div>
       <div className="flex flex-col">
         <div className="">
