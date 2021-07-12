@@ -199,7 +199,8 @@ function HistoryEvent({ event, eventIdx, history, user, users }) {
           <div className="min-w-0 flex-1 flex justify-between space-x-4">
             <div>
               <p className="text-sm text-gray-500">
-                <span className="font-medium text-gray-900">{eventUser}</span> removed{' '}
+                <span className="font-medium text-gray-900">{eventUser}</span>
+                {event.event === 'create' ? ' added ' : ' removed '}
                 <span className="font-medium text-gray-900">{event.itemName}</span> from the list
               </p>
             </div>
