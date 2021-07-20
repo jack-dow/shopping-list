@@ -123,7 +123,7 @@ function History() {
               <div className="flow-root" key={event.date}>
                 <p
                   className={classNames('pb-3 font-medium', {
-                    'pt-3': index > 0,
+                    'pt-4': index > 0,
                   })}
                 >
                   {date}
@@ -164,7 +164,7 @@ function HistoryEvent({ event, eventIdx, history, user, users }) {
 
   return (
     <li key={event.id}>
-      <div className="relative pb-7">
+      <div className="relative pb-8">
         {eventIdx !== history.length - 1 ? (
           <span
             className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
@@ -201,7 +201,8 @@ function HistoryEvent({ event, eventIdx, history, user, users }) {
               <p className="text-sm text-gray-500">
                 <span className="font-medium text-gray-900">{eventUser}</span>
                 {event.event === 'create' ? ' added ' : ' removed '}
-                <span className="font-medium text-gray-900">{event.itemName}</span> from the list
+                <span className="font-medium text-gray-900">{event.itemName}</span>
+                {event.event === 'create' ? ' to' : ' from'} the list
               </p>
             </div>
             <div className="text-right text-sm whitespace-nowrap text-gray-500">
