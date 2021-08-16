@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';

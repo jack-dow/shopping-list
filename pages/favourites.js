@@ -1,10 +1,10 @@
 /* eslint-disable no-nested-ternary */
 import { Transition } from '@headlessui/react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { SearchIcon } from '@heroicons/react/solid';
 
 import { useFavourites } from '../lib/queries/useFavourites';
-import { supabase } from '../lib/Store';
+
 import { UserContext } from '../lib/UserContext';
 import { useItems } from '../lib/queries/useItems';
 import Layout from '../components/Layout';
