@@ -1,4 +1,4 @@
-import { useEffect, useContext, Fragment } from 'react';
+import { useEffect, useContext, Fragment, useState } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
@@ -8,17 +8,25 @@ const withAuthentication = (WrappedComponent) => {
   const RequiresAuthentication = (props) => {
     const router = useRouter();
     const { user, getUser } = useContext(UserContext);
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-    useEffect(async () => {
+    useEffect(() => {
       if (!user) {
-        const currentUser = await getUser();
-        if (!currentUser) {
-          router.push('/login');
-        }
+        getUser();
       }
     }, []);
 
-    return user ? <WrappedComponent {...props} /> : <Fragment />;
+    useEffect(() => {
+      if (user) {
+        setIsAuthenticated(true);
+      }
+    }, [user]);
+
+    if (isAuthenticated == null) return <Fragment />;
+    if (isAuthenticated === false) return <div>Not allowed.</div>;
+    if (isAuthenticated) return <WrappedComponent {...props} />;
+
+    return <div>An error has occured.</div>;
   };
 
   return RequiresAuthentication;

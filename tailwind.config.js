@@ -11,6 +11,7 @@ module.exports = {
       colors: {
         gray: colors.gray,
         'true-gray': colors.trueGray,
+        'blue-gray': colors.blueGray,
         blue: colors.blue,
         sky: colors.sky,
         red: colors.red,

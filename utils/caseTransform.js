@@ -1,9 +1,7 @@
 export function camelToSnakeCase(object, fieldsToRemove) {
   if (Array.isArray(object)) {
     const camelCasedObjects = [];
-
     object.forEach((single) => camelCasedObjects.push(camelToSnakeCase(single)));
-
     return camelCasedObjects;
   }
 
@@ -24,9 +22,7 @@ export function camelToSnakeCase(object, fieldsToRemove) {
 export function snakeToCamelCase(object) {
   if (Array.isArray(object)) {
     const camelCasedObjects = [];
-
     object.forEach((single) => camelCasedObjects.push(snakeToCamelCase(single)));
-
     return camelCasedObjects;
   }
 
@@ -36,6 +32,24 @@ export function snakeToCamelCase(object) {
     str.replace(/([-_][a-z0-9])/g, (group) =>
       group.toUpperCase().replace('-', '').replace('_', '')
     );
+
+  Object.keys(object).forEach((key) => {
+    camelCasedObject[caseTransform(key)] = object[key] == null ? '' : object[key];
+  });
+
+  return camelCasedObject;
+}
+
+export function pascalToCamelCase(object) {
+  if (Array.isArray(object)) {
+    const camelCasedObjects = [];
+    object.forEach((single) => camelCasedObjects.push(pascalToCamelCase(single)));
+    return camelCasedObjects;
+  }
+
+  const camelCasedObject = {};
+
+  const caseTransform = (str) => str[0]?.toLowerCase() + str?.substring(1);
 
   Object.keys(object).forEach((key) => {
     camelCasedObject[caseTransform(key)] = object[key] == null ? '' : object[key];

@@ -66,7 +66,7 @@ export default function Input({
         )}
         <input
           type={type === 'password' && showingPassword ? 'text' : type}
-          name={name}
+          name={name || id}
           id={id}
           inputMode={inputMode}
           pattern={pattern}
@@ -134,7 +134,7 @@ export default function Input({
 Input.propTypes = {
   label: PropTypes.string,
   id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  // name: PropTypes.string.isRequired,
   type: PropTypes.string,
   value: PropTypes.string.isRequired,
   placeholder: PropTypes.string,

@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import Link from 'next/link';
 
-import { SearchIcon, HomeIcon, UserIcon, ClipboardIcon } from '@iconicicons/react';
+import { SearchIcon, HomeIcon, ClipboardIcon, HeartIcon } from '@iconicicons/react';
 
 export default function Layout({ title, children, contentMaxWidth }) {
   return (
-    <div className="w-screen h-screen bg-gray-100  relative transition-colors">
-      <div className="h-screen flex overflow-hidden bg-gray-100  transition-colors">
+    <div className="w-screen h-screen bg-blue-gray-50 relative transition-colors">
+      <div className="h-screen flex overflow-hidden bg-blue-gray-50 transition-colors">
         <div className="flex flex-col w-0 flex-1 overflow-hidden">
           {/* Content */}
           <main
@@ -24,7 +24,7 @@ export default function Layout({ title, children, contentMaxWidth }) {
                 </div>
               )}
               <div
-                className={classNames('mx-auto w-full flex flex-col flex-1 relative md:px-8', {
+                className={classNames('flex flex-col flex-1 relative md:px-8', {
                   'max-w-screen-2xl': !contentMaxWidth,
                   [contentMaxWidth]: contentMaxWidth,
                 })}
@@ -37,7 +37,7 @@ export default function Layout({ title, children, contentMaxWidth }) {
               </div>
             </div>
           </main>
-          <nav className="fixed bottom-0 w-full z-20 flex-shrink-0 px-4 py-2 flex justify-between items-center bg-gray-100">
+          <nav className="fixed bottom-0 w-full z-20 flex-shrink-0 px-4 py-2 flex justify-between items-center bg-blue-gray-50">
             <BottomNavButton href="/" title="Home">
               <HomeIcon className="w-8 h-8" />
             </BottomNavButton>
@@ -47,9 +47,12 @@ export default function Layout({ title, children, contentMaxWidth }) {
             <BottomNavButton href="/history" title="History">
               <ClipboardIcon className="w-8 h-8" />
             </BottomNavButton>
-            <BottomNavButton href="/settings" title="Profile">
-              <UserIcon className="w-8 h-8" />
+            <BottomNavButton href="/favourites" title="Favourites">
+              <HeartIcon className="w-8 h-8" />
             </BottomNavButton>
+            {/* <BottomNavButton href="/settings" title="Profile">
+              <UserIcon className="w-8 h-8" />
+            </BottomNavButton> */}
           </nav>
         </div>
       </div>
@@ -64,11 +67,11 @@ const BottomNavButton = ({ children, href, title, disabled }) => {
     (href === '/' && href === router.asPath) || (href !== '/' && router.asPath.startsWith(href));
 
   return (
-    <Link href={href}>
+    <Link href={href} shallow>
       <a
         href={href}
         className={classNames(
-          'group flex relative items-center text-sm font-medium bg-transparent focus:outline-none transition-all transform',
+          'group flex relative items-center bg-transparent focus:outline-none transition-all transform',
           {
             'text-gray-400': !isActive,
             'opacity-50 pointer-events-none': disabled,
@@ -84,22 +87,8 @@ const BottomNavButton = ({ children, href, title, disabled }) => {
           )}
         >
           {children}
-          <div>{title}</div>
+          <p className="text-sm font-medium -mt-0.5">{title}</p>
         </div>
-        {/* 
-        <Transition
-          show={isActive}
-          appear
-          enter="transition ease-in duration-150"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition ease-in duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          className="text-sky-600"
-        >
-          {title}
-        </Transition> */}
       </a>
     </Link>
   );
