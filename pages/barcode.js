@@ -7,7 +7,7 @@ import Scanner from '../components/BarcodeScanner/Scanner';
 import Result from '../components/BarcodeScanner/Result';
 // import CameraSelect from '../components/BarcodeScanner/CameraSelect';
 import Modal from '../components/Modal';
-import AlignmentCorner from '../components/icons/alignmentCorner';
+import AlignmentCorner from '../components/icons/AlignmentCorner';
 import { fetchProductsFromSearch } from '../redux/services/woolworths';
 
 const Barcode = () => {

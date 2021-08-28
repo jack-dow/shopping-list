@@ -7,7 +7,7 @@ import { ExclamationIcon } from '@heroicons/react/outline';
 import Scanner from './Scanner';
 // import CameraSelect from './CameraSelect';
 import Modal from '../Modal';
-import AlignmentCorner from '../icons/alignmentCorner';
+import AlignmentCorner from '../icons/AlignmentCorner';
 
 export default function BarcodeScanner({ open, setOpen }) {
   const router = useRouter();
