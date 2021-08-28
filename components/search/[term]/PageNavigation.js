@@ -1,6 +1,6 @@
 import { ArrowNarrowLeftIcon, ArrowNarrowRightIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
-import { fetchProductsFromSearch } from '../../../lib/queries/useProducts';
+import { fetchProductsFromSearch } from '../../../redux/services/woolworths';
 
 export default function PageNavigation({ currentPage, setCurrentPage, numOfPages, setProducts }) {
   const router = useRouter();

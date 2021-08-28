@@ -6,7 +6,7 @@ export default function SkeletonLoader({ show }) {
     <Transition appear show={show} {...defaultOpacityTransition} className="mt-3">
       {[...Array(3)].map((_, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <div key={index + 15}>
+        <div key={index + 1000}>
           {/* Date */}
           <div className="w-3/12 h-4 bg-gray-300 animate-pulse mb-3" />
           {[...Array(4)].map((__, historyIndex) => (

@@ -1,25 +1,42 @@
 /* eslint-disable no-nested-ternary */
 import { Transition } from '@headlessui/react';
-import { useContext, useState } from 'react';
-import { SearchIcon } from '@heroicons/react/solid';
+import { useEffect, useState } from 'react';
+import { SearchIcon } from '@iconicicons/react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { useFavourites } from '../lib/queries/useFavourites';
-
-import { UserContext } from '../lib/UserContext';
-import { useItems } from '../lib/queries/useItems';
 import Layout from '../components/Layout';
 import withAuthentication from '../HOCs/withAuthentication';
 import Header from '../components/Header';
 import { defaultOpacityTransition } from '../styles/defaults';
 import Product from '../components/search/[term]/Product';
 import SkeletonLoader from '../components/search/[term]/SkeletonLoader';
+import EmptyState from '../components/EmptyState';
+import { fetchAllItems } from '../redux/slices/itemsSlice';
+import { fetchAllFavourites } from '../redux/slices/favouritesSlice';
+import { sortProductsByName } from '../redux/store';
 
 function Favourites() {
-  const { user } = useContext(UserContext);
-  const { items } = useItems();
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.user);
+  const { items } = useSelector((state) => state.items);
+  const { favourites } = useSelector((state) => state.favourites);
+  const [sortedFavourites, setSortedFavourites] = useState(null);
+
   const [inputValue, setInputValue] = useState('');
   const [filterValue, setFilterValue] = useState(null);
-  const { favourites } = useFavourites(true, filterValue);
+
+  useEffect(() => {
+    dispatch(fetchAllItems(true));
+  }, []);
+
+  useEffect(() => {
+    if (favourites?.length > 0) setSortedFavourites(sortProductsByName(favourites));
+  }, [favourites]);
+
+  useEffect(() => {
+    dispatch(fetchAllFavourites({ withData: true, filterValue }));
+  }, [filterValue]);
 
   return (
     <Layout>
@@ -58,12 +75,12 @@ function Favourites() {
 
         {/* Main Content */}
         <Transition
-          show={favourites?.length > 0}
+          show={sortedFavourites?.length > 0}
           appear
           {...defaultOpacityTransition}
           className="grid grid-cols-2 gap-3"
         >
-          {favourites?.map((favourite) => (
+          {sortedFavourites?.map((favourite) => (
             <Product
               key={favourite.id}
               product={favourite}
@@ -73,6 +90,19 @@ function Favourites() {
             />
           ))}
         </Transition>
+
+        <EmptyState
+          show={favourites?.length === 0}
+          img={
+            <img
+              src="/spread_love.svg"
+              alt="Drawing a woman sitting infront of a heart"
+              className="h-48"
+            />
+          }
+          title="No favourites added yet"
+          description="Heart your favourite products in the search and then they'll appear here for easy access"
+        />
       </div>
     </Layout>
   );

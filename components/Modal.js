@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
-export default function Modal({ open, setOpen, children }) {
+export default function Modal({ open, setOpen, initialFocus, children }) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -10,6 +10,7 @@ export default function Modal({ open, setOpen, children }) {
         className="fixed z-50 inset-0 overflow-y-auto"
         open={open}
         onClose={setOpen}
+        initialFocus={initialFocus}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child

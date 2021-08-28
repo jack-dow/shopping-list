@@ -1,27 +1,27 @@
 import classNames from 'classnames';
 import { useContext } from 'react';
 import { MoonIcon, SunIcon } from '@iconicicons/react';
+import { useSelector } from 'react-redux';
 
 import { UserContext } from '../lib/UserContext';
-import { supabase } from '../lib/Store';
+import { supabase, useQuery } from '../lib/initSupabase';
 
 export default function DarkModeToggle() {
   const { useDarkMode, setUseDarkMode } = useContext(UserContext);
-  const { user, setUser, useQuery } = useContext(UserContext);
+  const { user } = useSelector((state) => state.user);
 
   return (
     <button
       type="button"
       onClick={async () => {
         if (user) {
-          const updatedUser = await useQuery(
+          await useQuery(
             supabase
               .from('users')
               .update({ dark_mode: !useDarkMode })
               .match({ id: user.id })
               .single()
           );
-          setUser(updatedUser);
         }
         window.localStorage.setItem('darkMode', !useDarkMode);
         setUseDarkMode(!useDarkMode);

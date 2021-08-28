@@ -17,10 +17,10 @@ export const defaultOpacityTransitionEaseOut = {
 };
 
 export const fastOpacityTransition = {
-  enter: 'transition duration-150',
+  enter: 'transition duration-200 ease-out',
   enterFrom: 'opacity-0',
   enterTo: 'opacity-100',
-  leave: 'transition duration-75',
+  leave: 'transition duration-150 ease-out',
   leaveFrom: 'opacity-100',
   leaveTo: 'opacity-0',
 };

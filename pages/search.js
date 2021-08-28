@@ -10,7 +10,13 @@ function Search() {
     <Layout>
       <NextSeo title="Product Search | TKIT Shopping List" />
       <div className="px-4 py-8">
-        <Header icon="🔍" titleSmall="Find exactly" title="What you need" productSearch />
+        <Header
+          icon="🔍"
+          titleSmall="Find exactly"
+          title="What you need"
+          productSearch
+          showScanner
+        />
         <EmptyState
           show
           img={

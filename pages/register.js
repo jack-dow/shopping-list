@@ -5,9 +5,9 @@ import classNames from 'classnames';
 import { NextSeo } from 'next-seo';
 
 import Input from '../components/Input';
-import { supabase } from '../lib/Store';
 import { camelToSnakeCase } from '../utils/caseTransform';
 import { UserContext } from '../lib/UserContext';
+import { supabase } from '../lib/initSupabase';
 
 export default function Register() {
   const router = useRouter();

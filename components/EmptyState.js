@@ -7,7 +7,7 @@ export default function EmptyState({ show, img, title, description }) {
       show={show}
       appear
       {...defaultOpacityTransition}
-      className="flex flex-col items-center justify-center flex-1"
+      className="flex flex-col items-center justify-center flex-1 pt-1"
     >
       <div className="flex items-center justify-center mx-auto">{img}</div>
       <div>

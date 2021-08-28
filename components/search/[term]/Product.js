@@ -1,12 +1,21 @@
-import { useState, Fragment, useEffect } from 'react';
+import { useState, Fragment, useEffect, useRef } from 'react';
 import classNames from 'classnames';
-import { HeartIcon as HeartIconSolid, MinusIcon, PlusIcon } from '@heroicons/react/solid';
+import {
+  BellIcon,
+  ExclamationIcon,
+  FireIcon,
+  HeartIcon as HeartIconSolid,
+  MinusIcon,
+  PlusIcon,
+} from '@heroicons/react/solid';
 import { HeartIcon as HeartIconOutline, PlusCircleIcon } from '@heroicons/react/outline';
 import { Transition } from '@headlessui/react';
+import { useDispatch } from 'react-redux';
 
-import { addItem, editItemQuantity } from '../../../lib/queries/useItems';
-import { addFavourite, deleteFavourite } from '../../../lib/queries/useFavourites';
-import { fastOpacityTransition } from '../../../styles/defaults';
+import { defaultOpacityTransition, fastOpacityTransition } from '../../../styles/defaults';
+import DetailedProductModal from './DetailedProductModal';
+import { addItem, editItemQuantity } from '../../../redux/slices/itemsSlice';
+import { addFavourite, deleteFavourite } from '../../../redux/slices/favouritesSlice';
 
 function checkIfSome(list, stockcodeToCheck) {
   return list?.some(({ stockcode }) => stockcode === stockcodeToCheck);
@@ -16,7 +25,9 @@ function findItem(list, stockcodeToFind) {
   return list?.find(({ stockcode }) => stockcode === stockcodeToFind);
 }
 
-export default function Product({ product, items, favourites, listID }) {
+export default function Product({ product, items, favourites }) {
+  const dispatch = useDispatch();
+
   const [onShoppingList, setOnShoppingList] = useState(checkIfSome(items, product.stockcode));
   const [isFavourite, setIsFavourite] = useState(checkIfSome(favourites, product.stockcode));
   const [item, setItem] = useState(findItem(items, product.stockcode));
@@ -24,6 +35,10 @@ export default function Product({ product, items, favourites, listID }) {
   const [isIncreasingQuantity, setIsIncreasingQuantity] = useState(false);
   const [isDecreasingQuantity, setIsDecreasingQuantity] = useState(false);
   const [isAddingItem, setIsAddingItem] = useState(false);
+
+  const [isShowingDetailedProductModal, setIsShowingDetailedProductModal] = useState(false);
+
+  const minusButtonRef = useRef(null);
 
   useEffect(() => {
     setOnShoppingList(checkIfSome(items, product.stockcode));
@@ -43,125 +58,155 @@ export default function Product({ product, items, favourites, listID }) {
   }, [onShoppingList]);
 
   return (
-    <div
-      key={product.stockcode}
-      className={classNames('flex relative flex-col bg-white rounded-2xl p-3 pb-0 shadow', {
-        'pointer-events-none': !product.isAvailable,
-      })}
-    >
-      {!product.isAvailable && (
-        <Fragment>
-          <div className="absolute z-20 flex items-center justify-center inset-0">
-            <span className="inline-flex items-center px-3.5 py-1.5 rounded-md font-medium bg-pink-100 text-pink-800">
-              Unavailable
-            </span>{' '}
-          </div>
-          <div className="absolute bg-white opacity-50 inset-0 z-10" />
-        </Fragment>
-      )}
-      <div className="flex items-center justify-center mb-2">
-        <img src={product.mediumImageFile} alt={product.displayName} className="w-30 h-30" />
-      </div>
-      <div className="absolute top-0 right-2">
-        <button
-          type="button"
-          className="relative w-6 h-6"
-          onClick={() => {
-            if (isFavourite) {
-              deleteFavourite(product.stockcode, listID);
-              setIsFavourite(false);
-            } else {
-              addFavourite(product.stockcode, product.displayName, listID);
-              setIsFavourite(true);
-            }
-          }}
-        >
-          <HeartIconOutline
-            className={classNames('absolute inset-y-0 w-6 h-6 text-red-600 transition-all', {
-              'opacity-100': !isFavourite,
-              'opacity-0': isFavourite,
-            })}
-          />
-          <HeartIconSolid
-            className={classNames('absolute inset-y-0 w-6 h-6 text-red-600 transition-all', {
-              'opacity-100': isFavourite,
-              'opacity-0': !isFavourite,
-            })}
-          />
-        </button>
-      </div>
-      <div className="flex flex-col">
-        <div className="">
-          <p className="text-gray-900 font-medium leading-6 line-clamp-2">{product.displayName}</p>
-          <p className="text-xs text-true-gray-400 opacity-80">
-            {product.cupString?.toLowerCase() || 'N/A'}
-          </p>
-        </div>
-        <p className="text-sky-600 font-medium leading-8">
-          $
-          {Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' })
-            .format(product.price)
-            .substring(1)}
-        </p>
-      </div>
-      <div
-        className={classNames(
-          'border-t border-gray-200 h-11 -mx-3 relative rounded-b-2xl transition duration-150',
-          {
-            'bg-white': !onShoppingList,
-            'bg-sky-600': onShoppingList,
-          }
-        )}
-      >
-        <button
-          type="button"
-          disabled={isAddingItem}
-          className="flex space-x-1 relative items-center justify-center w-full py-3 h-11 rounded-b-2xl transition focus:outline-none focus:ring-2 focus:ring-sky-600 disabled:opacity-40 disabled:cursor-not-allowed"
-          tabIndex={onShoppingList ? -1 : 0}
-          onClick={async () => {
-            setIsAddingItem(true);
-            await addItem({ stockcode: product.stockcode, name: product.displayName }, listID);
-          }}
-        >
-          <PlusCircleIcon className="w-5 h-5 text-sky-600" />
-          <p className="text-sky-600 font-medium text-sm">Add to List</p>
-        </button>
-        <Transition
-          show={onShoppingList}
-          {...fastOpacityTransition}
-          className="absolute bottom-0 h-full text-white rounded-b-2xl w-full flex items-center justify-between px-3 space-x-2"
-        >
+    <Fragment>
+      <DetailedProductModal
+        open={isShowingDetailedProductModal}
+        setOpen={setIsShowingDetailedProductModal}
+        product={product}
+      />
+      <div className="relative flex flex-col bg-white shadow-md rounded-md border border-gray-100">
+        {/* Favourites button */}
+        <div className="absolute -top-3 -right-2 z-[2]">
           <button
             type="button"
-            disabled={isDecreasingQuantity}
-            onClick={async () => {
-              if (item?.id && item?.quantity) {
-                setIsDecreasingQuantity(true);
-                await editItemQuantity(item?.id, item?.quantity - 1);
-                if (item?.quantity - 1 > 0) {
-                  setIsDecreasingQuantity(false);
-                }
+            className="relative bg-white shadow w-6 h-6 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-600 transition"
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (isFavourite) {
+                dispatch(deleteFavourite(product.stockcode));
+                setIsFavourite(false);
+              } else {
+                dispatch(addFavourite({ stockcode: product.stockcode, name: product.name }));
+                setIsFavourite(true);
               }
             }}
-            className="w-6 h-6 flex items-center justify-center relative focus:outline-none focus:text-gray-500 transition disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <MinusIcon className="w-5 h-5" />
+            <Transition
+              show={!isFavourite}
+              {...defaultOpacityTransition}
+              className="absolute inset-center"
+            >
+              <HeartIconOutline className="w-3.5 h-3.5 text-red-600" />
+            </Transition>
+            <Transition
+              show={isFavourite}
+              {...defaultOpacityTransition}
+              className="absolute inset-center"
+            >
+              <HeartIconSolid className="w-3.5 h-3.5 text-red-600" />
+            </Transition>
           </button>
-          <p>{item?.quantity}</p>
+        </div>
+        <button
+          type="button"
+          className="rounded-t-md flex-1 flex flex-col justify-start text-left focus:outline-none focus:ring-2 focus:ring-sky-600 focus:z-1 transition"
+          onClick={() => setIsShowingDetailedProductModal(true)}
+        >
+          <img
+            src={product.mediumImageFile}
+            alt={product.name}
+            className="w-28 h-28 mx-auto my-3"
+          />
+          <div className="px-3 pb-2 flex-1">
+            {product.isNew && (
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                <BellIcon className="w-3.5 h-3.5 mr-0.5" /> New
+              </span>
+            )}
+            <p className="font-semibold text-gray-400 text-sm">{product.brand || 'Woolworths'}</p>
+            <p className="font-semibold text-gray-700 leading-tight line-clamp-2 text-sm tracking-tight">
+              {product.brand ? product.name.replace(`${product.brand} `, '') : product.name}
+            </p>
+            {product.cupString && (
+              <p className="font-medium text-gray-400 text-xs lowercase py-0.5">
+                {product.cupString}
+              </p>
+            )}
+            {product.price && (
+              <div>
+                <p className="text-sm font-medium text-sky-600">${product.price.toFixed(2)}</p>
+                {product.price < product.wasPrice && (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 my-0.5">
+                    <FireIcon className="w-3.5 h-3.5 mr-0.5" /> Save $
+                    {product.savingsAmount.toFixed(2)}
+                  </span>
+                )}
+              </div>
+            )}
+            {!product.isAvailable && (
+              <div className="my-1">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                  <ExclamationIcon className="w-3.5 h-3.5 mr-0.5" /> Unavailable
+                </span>
+              </div>
+            )}
+          </div>
+        </button>
+        <div
+          className={classNames(
+            'relative border-t border-gray-100 rounded-b-md h-[41px] -mb-px -mx-px transition',
+            {
+              'bg-white': !onShoppingList,
+              'bg-sky-600': onShoppingList,
+            }
+          )}
+        >
           <button
             type="button"
-            disabled={isIncreasingQuantity || item?.quantity > 14}
-            onClick={async () => {
-              setIsIncreasingQuantity(true);
-              await editItemQuantity(item?.id, item?.quantity + 1);
-              setIsIncreasingQuantity(false);
+            tabIndex={!onShoppingList ? 0 : -1}
+            className="flex items-center justify-center w-full h-full rounded-b-md focus:outline-none focus:ring-2 focus:ring-sky-600 transition"
+            onClick={(e) => {
+              setIsAddingItem(true);
+              dispatch(addItem({ item: { stockcode: product.stockcode, name: product.name } }));
+              e.target.blur();
             }}
-            className="w-6 h-6 flex items-center justify-center relative focus:outline-none focus:text-gray-500 transition disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <PlusIcon className="w-5 h-5" />
+            <PlusCircleIcon className="w-5 h-5 mr-0.5 text-sky-600" />
+            <p className="text-sky-600 font-medium text-sm">Add to List</p>
           </button>
-        </Transition>
+
+          <Transition
+            show={onShoppingList}
+            {...fastOpacityTransition}
+            className="absolute bottom-0 h-full text-white rounded-b-2xl w-full flex items-center justify-between px-3 space-x-2"
+          >
+            <button
+              type="button"
+              ref={minusButtonRef}
+              disabled={isDecreasingQuantity}
+              onClick={async (e) => {
+                e.stopPropagation();
+                if (item?.id && item?.quantity) {
+                  setIsDecreasingQuantity(true);
+                  await dispatch(editItemQuantity({ id: item?.id, quantity: item?.quantity - 1 }));
+                  if (item?.quantity - 1 > 0) {
+                    setIsDecreasingQuantity(false);
+                    e.target.focus();
+                  }
+                }
+              }}
+              className="w-6 h-6 flex items-center justify-center relative focus:outline-none focus:text-gray-500 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <MinusIcon className="w-5 h-5" />
+            </button>
+            <p>{item?.quantity}</p>
+            <button
+              type="button"
+              disabled={isIncreasingQuantity || item?.quantity > 14}
+              onClick={async (e) => {
+                e.stopPropagation();
+                setIsIncreasingQuantity(true);
+                await dispatch(editItemQuantity({ id: item?.id, quantity: item?.quantity + 1 }));
+                setIsIncreasingQuantity(false);
+                e.target.focus();
+              }}
+              className="w-6 h-6 flex items-center justify-center relative focus:outline-none focus:text-gray-500 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <PlusIcon className="w-5 h-5" />
+            </button>
+          </Transition>
+        </div>
       </div>
-    </div>
+    </Fragment>
   );
 }

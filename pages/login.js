@@ -3,17 +3,34 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';
 
+import { useDispatch } from 'react-redux';
 import Input from '../components/Input';
-import { supabase } from '../lib/Store';
 import Spinner from '../components/Spinner';
+import { setSession } from '../redux/slices/userSlice';
+import { supabase } from '../lib/initSupabase';
 
 export default function Login() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState();
   const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && isProcessing && session) {
+        dispatch(setSession(session));
+        setIsProcessing(false);
+        router.push('/');
+      }
+    });
+
+    return () => {
+      authListener.unsubscribe();
+    };
+  }, [isProcessing]);
 
   useEffect(() => {
     if (loginError) {
@@ -35,11 +52,7 @@ export default function Login() {
         console.log(error.message);
         setLoginError(error.message);
         setIsProcessing(false);
-        return;
       }
-
-      router.push('/');
-      setIsProcessing(false);
     }
   };
 
@@ -72,6 +85,7 @@ export default function Login() {
               id="email"
               name="email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -84,6 +98,7 @@ export default function Login() {
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -92,7 +107,6 @@ export default function Login() {
 
               {loginError && <p className="mt-2 text-sm text-red-600">{loginError}</p>}
             </div>
-
             <button
               type="submit"
               onClick={handleLogin}
@@ -134,7 +148,7 @@ export default function Login() {
                       const user = supabase.auth.user();
                       console.log(user);
                     }}
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-true-gray-300 rounded-md shadow-sm bg-white dark:bg-true-gray-800 text-sm font-medium text-true-gray-500 dark:text-true-gray-300 hover:bg-gray-50 dark:hover:bg-true-gray-900 focus:bg-gray-50 focus:dark:bg-true-gray-900 transition"
+                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-true-gray-300 rounded-md shadow-sm bg-white dark:bg-true-gray-800 text-sm font-medium text-true-gray-500 dark:text-true-gray-300 hover:bg-gray-50 dark:hover:bg-true-gray-900 focus:bg-gray-50 dark:focus:bg-true-gray-900 transition"
                   >
                     <span className="sr-only">Sign in with Facebook</span>
                     <svg
@@ -166,7 +180,7 @@ export default function Login() {
 
                       console.log(user);
                     }}
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-true-gray-300 rounded-md shadow-sm bg-white dark:bg-true-gray-800 text-sm font-medium text-true-gray-500 dark:text-true-gray-300 hover:bg-gray-50 dark:hover:bg-true-gray-900 focus:bg-gray-50 focus:dark:bg-true-gray-900 transition"
+                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-true-gray-300 rounded-md shadow-sm bg-white dark:bg-true-gray-800 text-sm font-medium text-true-gray-500 dark:text-true-gray-300 hover:bg-gray-50 dark:hover:bg-true-gray-900 focus:bg-gray-50 dark:focus:bg-true-gray-900 transition"
                   >
                     <span className="sr-only">Sign in with Google</span>
                     <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">

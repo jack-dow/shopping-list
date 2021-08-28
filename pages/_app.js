@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import toast, { Toaster, useToasterStore } from 'react-hot-toast';
 import { DefaultSeo } from 'next-seo';
+import { Provider } from 'react-redux';
 
+import store from '../redux/store';
 import { UserProvider } from '../lib/UserContext';
-
 import '../styles.css';
 
 function MyApp({ Component, pageProps }) {
@@ -17,18 +18,20 @@ function MyApp({ Component, pageProps }) {
   }, [toasts]);
 
   return (
-    <UserProvider>
-      <DefaultSeo
-        openGraph={{
-          type: 'website',
-          locale: 'en_IE',
-          url: 'https://www.shopping.tkit.tech/',
-          site_name: 'TKIT Shopping List',
-        }}
-      />
-      <Component {...pageProps} />
-      <Toaster />
-    </UserProvider>
+    <Provider store={store}>
+      <UserProvider>
+        <DefaultSeo
+          openGraph={{
+            type: 'website',
+            locale: 'en_IE',
+            url: 'https://www.shopping.tkit.tech/',
+            site_name: 'TKIT Shopping List',
+          }}
+        />
+        <Component {...pageProps} />
+        <Toaster />
+      </UserProvider>
+    </Provider>
   );
 }
 

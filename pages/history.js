@@ -1,30 +1,32 @@
 /* eslint-disable react/no-array-index-key */
-import { useContext, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import dayjs from 'dayjs';
 import { NextSeo } from 'next-seo';
 import classNames from 'classnames';
 import { Transition } from '@headlessui/react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { fetchUsers } from '../lib/Store';
 import Layout from '../components/Layout';
-import { UserContext } from '../lib/UserContext';
 import withAuthentication from '../HOCs/withAuthentication';
 import Header from '../components/Header';
 import SkeletonLoader from '../components/history/SkeletonLoader';
 import EmptyState from '../components/EmptyState';
 import Event from '../components/history/Event';
 import { defaultOpacityTransition } from '../styles/defaults';
-import { fetchHistory } from '../lib/queries/useHistory';
+import { fetchAllUsers } from '../redux/slices/userSlice';
+import { fetchAllHistory } from '../redux/slices/historySlice';
 
 function History() {
-  const { user } = useContext(UserContext);
-  const [history, setHistory] = useState(null);
-  const [allUsers, setAllUsers] = useState(null);
+  const dispatch = useDispatch();
+  const { user, users } = useSelector((state) => state.user);
+  const { history } = useSelector((state) => state.history);
 
   useEffect(() => {
-    fetchHistory(setHistory);
-    fetchUsers(setAllUsers);
+    dispatch(fetchAllHistory());
+    dispatch(fetchAllUsers());
   }, []);
+
+  console.log(history);
 
   return (
     <Layout>
@@ -36,14 +38,15 @@ function History() {
         <Transition appear show={history?.length > 0} {...defaultOpacityTransition}>
           {history?.map((event, index) => {
             let date;
-            const todayDate = dayjs().format('DD-MM-YYYY');
+            const todayDate = dayjs().format('YYYY-MM-DD');
 
             if (event.date === todayDate) {
               date = 'Today';
-            } else if (event.date === dayjs().subtract(1, 'day').format('DD-MM-YYYY')) {
+            } else if (event.date === dayjs().subtract(1, 'day').format('YYYY-MM-DD')) {
               date = 'Yesterday';
             } else {
               date = dayjs(event.date).format('MMMM D');
+              // date = 'cunt';
             }
 
             return (
@@ -63,7 +66,7 @@ function History() {
                       history={event.history}
                       event={singleEvent}
                       user={user}
-                      users={allUsers}
+                      users={users}
                     />
                   ))}
                 </ul>

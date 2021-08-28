@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react';
 export default function Event({ event, eventIdx, history, user, users }) {
   const [eventUser, setEventUser] = useState(null);
 
-  console.log(event);
-
   useEffect(() => {
     if (event.user === user.id) {
       setEventUser('You');

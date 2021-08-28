@@ -18,6 +18,7 @@ export default function Toast(config) {
     (t) => (
       <Transition
         show={t.visible}
+        appear
         {...defaultOpacityTransitionEaseOut}
         className="max-w-sm w-full shadow-lg rounded-lg bg-white dark:bg-true-gray-800 ring-1 ring-black ring-opacity-5 overflow-hidden pointer-events-auto transition"
       >
