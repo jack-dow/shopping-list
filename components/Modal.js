@@ -1,7 +1,24 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { useRouter } from 'next/router';
 
 export default function Modal({ open, setOpen, initialFocus, children }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (window) {
+      if (open) {
+        router.beforePopState(() => {
+          window.history.go(1);
+          setOpen(false);
+          return false;
+        });
+      } else {
+        router.beforePopState(() => true);
+      }
+    }
+  }, [open]);
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog

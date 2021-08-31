@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import Quagga from '@ericblade/quagga2';
 
 function getMedian(arr) {
@@ -26,17 +26,21 @@ const defaultDecoders = ['ean_reader', 'ean_8_reader'];
 const Scanner = ({
   onDetected,
   scannerRef,
+  onScannerStarting,
   onScannerReady,
+  onScannerStopped,
+  scannerStarted,
   onError,
   cameraId,
   facingMode,
   constraints,
-  scanning,
   locator = defaultLocatorSettings,
   numOfWorkers = navigator.hardwareConcurrency || 0,
   decoders = defaultDecoders,
   locate = true,
 }) => {
+  const [hasInit, setHasInit] = useState(false);
+
   const errorCheck = useCallback(
     (result) => {
       if (!onDetected) {
@@ -51,16 +55,22 @@ const Scanner = ({
     [onDetected]
   );
 
+  useEffect(() => {
+    console.log('hasInit changed: ', hasInit);
+  }, [hasInit]);
+
   useLayoutEffect(() => {
-    if (scannerRef && scannerRef.current) {
-      Quagga.init(
-        {
+    if (!hasInit) {
+      setHasInit(true);
+      try {
+        Quagga.init({
           inputStream: {
             type: 'LiveStream',
             constraints: {
               ...constraints,
               ...(cameraId && { deviceId: cameraId }),
               ...(!cameraId && { facingMode }),
+              // aspectRatio: 16 / 9,
             },
             target: scannerRef.current,
           },
@@ -68,38 +78,30 @@ const Scanner = ({
           numOfWorkers,
           decoder: { readers: decoders, multiple: false },
           locate,
-        },
-        // eslint-disable-next-line consistent-return
-        (err) => {
-          if (err) {
-            if (onScannerReady) onScannerReady();
+        })
+          .catch((err) => {
             if (onError) onError(err);
-            return console.log('Error starting Quagga:', err);
-          }
-
-          if (scannerRef && scannerRef.current && scanning) {
+            return console.log('Quagga error occured: ', err);
+          })
+          .then(() => {
             Quagga.start();
-            console.log('quagga started');
+            console.log('Quagga started');
 
             if (onScannerReady) onScannerReady();
-          }
-        }
-      );
+          });
+      } catch (error) {
+        return;
+      }
 
       Quagga.onDetected(errorCheck);
     }
-
-    return () => {
-      console.log('quagga stopped');
-
-      Quagga.offDetected(errorCheck);
-      Quagga.stop();
-    };
   }, [
     cameraId,
     onDetected,
+    onScannerStarting,
     onScannerReady,
-    scanning,
+    onScannerStopped,
+    scannerStarted,
     scannerRef,
     errorCheck,
     constraints,
