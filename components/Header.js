@@ -1,12 +1,14 @@
 import { SearchIcon } from '@iconicicons/react';
 import classNames from 'classnames';
+import { CameraAccess } from '@ericblade/quagga2';
 import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import BarcodeScanner from './BarcodeScanner';
 import BarcodeIcon from './icons/BarcodeIcon';
 
 export default function Header({ title, titleSmall, icon, productSearch, showScanner, children }) {
   const [showingScannerModal, setShowingScannerModal] = useState(false);
+
   return (
     <Fragment>
       <BarcodeScanner
@@ -40,6 +42,14 @@ export default function Header({ title, titleSmall, icon, productSearch, showSca
 export function ProductSearchInput({ showScanner, setShowingScannerModal }) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
+  const [hasCamera, setHasCamera] = useState(true);
+
+  useEffect(() => {
+    CameraAccess.enumerateVideoDevices().then((devices) => {
+      const videoDevices = devices.filter((x) => x.kind === 'videoinput');
+      if (videoDevices?.length === 0) setHasCamera(false);
+    });
+  }, []);
   return (
     <form
       className="w-full flex pb-4"
@@ -69,10 +79,11 @@ export function ProductSearchInput({ showScanner, setShowingScannerModal }) {
           typeof navigator.mediaDevices.getUserMedia === 'function' && (
             <button
               type="button"
+              disabled={!hasCamera}
               onClick={() => setShowingScannerModal(true)}
-              className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-sky-600 hover:bg-sky-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-600"
+              className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-sky-600 hover:bg-sky-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-600 disabled:opacity-30 disabled:cursor-not-allowed focus:bg-sky-600"
             >
-              <BarcodeIcon className="w-8 h-8" />
+              <BarcodeIcon className="w-9 h-9" />
             </button>
           )}
       </div>

@@ -62,7 +62,7 @@ function Favourites() {
                 <input
                   type="text"
                   className="shadow-sm border-none py-4 pl-10 bg-white rounded-lg w-full text-gray-600 focus:ring-2 focus:ring-sky-600 transition"
-                  placeholder="Search"
+                  placeholder="Filter favourites"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                 />

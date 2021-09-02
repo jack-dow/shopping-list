@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import Quagga from '@ericblade/quagga2';
 
 function getMedian(arr) {
@@ -40,12 +40,14 @@ const Scanner = ({
   locate = true,
 }) => {
   const [hasInit, setHasInit] = useState(false);
+  let errorOccured = false;
 
   const errorCheck = useCallback(
     (result) => {
       if (!onDetected) {
         return;
       }
+
       const err = getMedianOfCodeErrors(result.codeResult.decodedCodes);
       // if Quagga is at least 90% certain that it read correctly, then accept the code.
       if (err < 0.1) {
@@ -54,10 +56,6 @@ const Scanner = ({
     },
     [onDetected]
   );
-
-  useEffect(() => {
-    console.log('hasInit changed: ', hasInit);
-  }, [hasInit]);
 
   useLayoutEffect(() => {
     if (!hasInit) {
@@ -80,14 +78,18 @@ const Scanner = ({
           locate,
         })
           .catch((err) => {
+            errorOccured = true;
             if (onError) onError(err);
+
             return console.log('Quagga error occured: ', err);
           })
           .then(() => {
-            Quagga.start();
-            console.log('Quagga started');
+            if (!errorOccured) {
+              Quagga.start();
+              console.log('Quagga started');
 
-            if (onScannerReady) onScannerReady();
+              if (onScannerReady) onScannerReady();
+            }
           });
       } catch (error) {
         return;
