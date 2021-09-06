@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -14,6 +14,7 @@ import EmptyState from '../../components/EmptyState';
 import { fetchProductsFromSearch } from '../../redux/services/woolworths';
 import { clearItems, fetchAllItems } from '../../redux/slices/itemsSlice';
 import { clearFavourites, fetchAllFavourites } from '../../redux/slices/favouritesSlice';
+import Filters from '../../components/search/[term]/Filters';
 
 function SearchTerm() {
   const router = useRouter();
@@ -27,7 +28,7 @@ function SearchTerm() {
   const [term, setTerm] = useState(initialTerm || '');
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [numOfPages, setNumOfPages] = useState(1);
+  const [productCount, setProductCount] = useState(1);
 
   console.log(favourites);
 
@@ -44,7 +45,7 @@ function SearchTerm() {
   // Fetch product data from woolworths API
   useEffect(() => {
     if (initialTerm && !products) {
-      fetchProductsFromSearch(initialTerm, setProducts, setNumOfPages);
+      fetchProductsFromSearch(initialTerm, setProducts, setProductCount);
     }
   }, [initialTerm]);
 
@@ -53,7 +54,7 @@ function SearchTerm() {
     setProducts();
     setCurrentPage(1);
     setTerm(router.query.term);
-    fetchProductsFromSearch(router.query.term, setProducts, setNumOfPages);
+    fetchProductsFromSearch(router.query.term, setProducts, setProductCount);
   }, [router.query.term]);
 
   return (
@@ -66,6 +67,7 @@ function SearchTerm() {
           productSearch
           showScanner
         />
+        <Filters productCount={productCount} />
 
         <SkeletonLoader show={!Array.isArray(products)} />
 
@@ -98,7 +100,7 @@ function SearchTerm() {
         <PageNavigation
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          numOfPages={numOfPages}
+          productCount={productCount}
           setProducts={setProducts}
         />
       )}

@@ -44,7 +44,10 @@ export default function BarcodeScanner({ open, setOpen }) {
   }, [scannerError]);
 
   useEffect(() => {
-    if (stopScanner && (scannerStarted || scannerError)) {
+    if (
+      stopScanner &&
+      (scannerStarted || scannerError || showingPermissionsPrompt || showNoPermissionsModal)
+    ) {
       if (scannerStarted) {
         Quagga.stop();
         console.log('Quagga stopped');
@@ -192,12 +195,12 @@ export default function BarcodeScanner({ open, setOpen }) {
             </div>
             <div className="mt-3 text-center sm:mt-5">
               <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                Camera permissions required
+                Camera access required
               </Dialog.Title>
               <div className="mt-2">
                 <p className="text-sm text-gray-500">
-                  To enable this, go to your browser settings and enable camera permissions for
-                  list.tkit.app and then try again.
+                  Please allow list.tkit.app to access the camera on your deivce. This permission
+                  can be found in your browser settings.
                 </p>
               </div>
             </div>

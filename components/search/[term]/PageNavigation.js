@@ -2,7 +2,7 @@ import { ArrowNarrowLeftIcon, ArrowNarrowRightIcon } from '@heroicons/react/soli
 import { useRouter } from 'next/router';
 import { fetchProductsFromSearch } from '../../../redux/services/woolworths';
 
-export default function PageNavigation({ currentPage, setCurrentPage, numOfPages, setProducts }) {
+export default function PageNavigation({ currentPage, setCurrentPage, productCount, setProducts }) {
   const router = useRouter();
 
   return (
@@ -25,13 +25,13 @@ export default function PageNavigation({ currentPage, setCurrentPage, numOfPages
       <div className="pt-4">
         <p className="text-sm text-gray-700">
           Page <span className="font-medium">{currentPage}</span> of{' '}
-          <span className="font-medium">{numOfPages}</span>{' '}
+          <span className="font-medium">{Math.ceil(productCount / 12)}</span>{' '}
         </p>
       </div>
       <div className="-mt-px w-0 flex-1 flex justify-end">
         <button
           type="button"
-          disabled={currentPage === numOfPages}
+          disabled={currentPage === Math.ceil(productCount / 12)}
           onClick={async () => {
             setProducts();
             await fetchProductsFromSearch(router.query.term, setProducts, null, currentPage + 1);
