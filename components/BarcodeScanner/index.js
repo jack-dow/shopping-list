@@ -33,7 +33,6 @@ export default function BarcodeScanner({ open, setOpen }) {
       });
       setShowingPermissionsPrompt(!deviceHasLabel);
       setSelectedCamera(videoDevices[videoDevices.length - 1]);
-      console.log(videoDevices);
     });
   }, []);
 
@@ -133,7 +132,10 @@ export default function BarcodeScanner({ open, setOpen }) {
                 </button>
               </div>
             ) : (
-              <div ref={updateScannerRef} className="relative w-full h-full flex-1">
+              <div
+                ref={updateScannerRef}
+                className="relative w-full h-full flex-1 flex items-center justify-center"
+              >
                 <canvas className="hidden drawingBuffer" width="640" height="480" />
 
                 <div className="w-full px-11 h-52 absolute inset-center">
