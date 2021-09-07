@@ -1,17 +1,26 @@
 import { Fragment } from 'react';
+import { useRouter } from 'next/router';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid';
+
 import classNames from '../../../../utils/classNames';
+import { fetchProductsFromSearch } from '../../../../redux/services/woolworths';
 
 const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
+  { name: 'Most Popular', value: 'TraderRelevance' },
+  { name: 'Specials', value: 'Specials' },
+  { name: 'Newest', value: 'AvailableDateDesc' },
+  { name: 'Name: A-Z', value: 'Name' },
+  { name: 'Name: Z-A', value: 'NameDesc' },
+  { name: 'Price: Low to High', value: 'PriceAsc' },
+  { name: 'Price: High to Low', value: 'PriceDesc' },
+  { name: 'Unit Price: Low to High', value: 'CUPAsc' },
+  { name: 'Unit Price: High to Low', value: 'CUPDesc' },
 ];
 
-export default function Sort() {
+export default function Sort({ setCurrentPage, setProducts, sortOrder, setSortOrder }) {
+  const router = useRouter();
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -33,21 +42,30 @@ export default function Sort() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="origin-top-left absolute left-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="origin-top-left absolute left-0 mt-2 w-48 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             {sortOptions.map((option) => (
               <Menu.Item key={option.name}>
                 {({ active }) => (
-                  <a
-                    href={option.href}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSortOrder(option.value);
+                      setCurrentPage(0);
+                      setProducts(null);
+                      fetchProductsFromSearch(
+                        { searchTerm: router.query.term, sortOrder: option.value },
+                        { setProducts }
+                      );
+                    }}
                     className={classNames(
-                      option.current ? 'font-medium text-gray-900' : 'text-gray-500',
+                      sortOrder === option.value ? 'font-medium text-gray-900' : 'text-gray-500',
                       active ? 'bg-gray-100' : '',
                       'block px-4 py-2 text-sm'
                     )}
                   >
                     {option.name}
-                  </a>
+                  </button>
                 )}
               </Menu.Item>
             ))}

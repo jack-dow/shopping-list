@@ -43,22 +43,28 @@ export const fetchProductByStockcode = async (item) => {
   }
 };
 
-export const fetchProductsFromSearch = async (searchTerm, setState, setCount, pageNumber) => {
+export const fetchProductsFromSearch = async (searchProps, stateChanges) => {
+  const { searchTerm, pageNumber, sortOrder } = searchProps;
+  const { setProducts, setProductCount } = stateChanges;
   const { data } = await axios.get(
-    `${baseUrl}Search/products?searchTerm=${searchTerm}&pageSize=12&pageNumber=${pageNumber || '1'}`
+    `${baseUrl}Search/products?searchTerm=${searchTerm}&pageSize=12&pageNumber=${
+      pageNumber || '1'
+    }&sortType=${sortOrder}`
   );
 
   if (data.Products) {
+    console.log(data);
     const productData = data.Products.map(({ Products }) => pascalToCamelCase(Products[0]));
-    if (setState) setState(productData);
-    if (setCount) setCount(data.SearchResultsCount);
+    if (setProducts) setProducts(productData);
+    if (setProductCount) setProductCount(data.SearchResultsCount);
     return {
       products: productData,
       productCount: data.SearchResultsCount,
     };
   }
-  if (setState) setState([]);
-  if (setCount) setCount(0);
+
+  if (setProducts) setProducts([]);
+  if (setProductCount) setProductCount(0);
   return {
     products: [],
     productCount: 0,

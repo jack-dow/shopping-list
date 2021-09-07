@@ -44,7 +44,13 @@ const filters = [
 
 const activeFilters = [{ value: 'objects', label: 'Objects' }];
 
-export default function SearchFilters({ productCount }) {
+export default function SearchFilters({
+  productCount,
+  setCurrentPage,
+  setProducts,
+  sortOrder,
+  setSortOrder,
+}) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
@@ -60,8 +66,13 @@ export default function SearchFilters({ productCount }) {
         </h2>
 
         <div className="relative z-10 pb-4">
-          <div className="max-w-7xl mx-auto px-4 flex items-center justify-between sm:px-6 lg:px-8">
-            <Sort />
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <Sort
+              setCurrentPage={setCurrentPage}
+              setProducts={setProducts}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+            />
             <p className="text-sm font-medium text-gray-900">{productCount} products</p>
             <button
               type="button"
@@ -130,8 +141,8 @@ export default function SearchFilters({ productCount }) {
         </div>
 
         {/* Active filters */}
-        <div className="bg-gray-100 mb-4 -mx-3 px-3">
-          <div className="max-w-7xl mx-auto py-3 px-4 sm:flex sm:items-center sm:px-6 lg:px-8">
+        <div className="bg-gray-100 mb-4 -mx-4 px-4">
+          <div className="max-w-7xl mx-auto py-3 sm:flex sm:items-center">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
               Filters
               <span className="sr-only">, active</span>

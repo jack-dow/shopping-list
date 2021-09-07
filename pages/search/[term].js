@@ -19,18 +19,17 @@ import Filters from '../../components/search/[term]/Filters';
 function SearchTerm() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { initialTerm } = router.query;
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.items);
   const { favourites } = useSelector((state) => state.favourites);
 
   const [products, setProducts] = useState();
-  const [term, setTerm] = useState(initialTerm || '');
+  const [searchTerm, setSearchTerm] = useState(null);
 
+  const [filters, setFilters] = useState([]);
+  const [sortOrder, setSortOrder] = useState('TraderRelevance');
   const [currentPage, setCurrentPage] = useState(1);
   const [productCount, setProductCount] = useState(1);
-
-  console.log(favourites);
 
   useEffect(() => {
     dispatch(fetchAllItems());
@@ -44,30 +43,41 @@ function SearchTerm() {
 
   // Fetch product data from woolworths API
   useEffect(() => {
-    if (initialTerm && !products) {
-      fetchProductsFromSearch(initialTerm, setProducts, setProductCount);
+    if (searchTerm && !products) {
+      fetchProductsFromSearch({ searchTerm, sortOrder }, { setProducts, setProductCount });
     }
-  }, [initialTerm]);
+  }, [searchTerm]);
 
   // Reset variables on term change
   useEffect(() => {
     setProducts();
     setCurrentPage(1);
-    setTerm(router.query.term);
-    fetchProductsFromSearch(router.query.term, setProducts, setProductCount);
+    setSearchTerm(router.query.term);
+    fetchProductsFromSearch(
+      { searchTerm: router.query.term, sortOrder },
+      { setProducts, setProductCount }
+    );
   }, [router.query.term]);
+
+  console.log(products);
 
   return (
     <Layout>
       <div className="px-4 pt-8">
         <Header
           icon="🔍"
-          titleSmall={term ? 'Results for' : 'Find exactly'}
-          title={term ? `"${term}"` : 'What you need'}
+          titleSmall={searchTerm ? 'Results for' : 'Find exactly'}
+          title={searchTerm ? `"${searchTerm}"` : 'What you need'}
           productSearch
           showScanner
         />
-        <Filters productCount={productCount} />
+        <Filters
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          setCurrentPage={setCurrentPage}
+          productCount={productCount}
+          setProducts={setProducts}
+        />
 
         <SkeletonLoader show={!Array.isArray(products)} />
 
@@ -91,13 +101,14 @@ function SearchTerm() {
         <EmptyState
           show={products?.length === 0}
           img={<img src="/empty.svg" alt="Drawing of man holding an empty box" className="h-52" />}
-          title={`Whoops. No product "${term}" could be found`}
+          title={`Whoops. No product "${searchTerm}" could be found`}
           description="Check your spelling or enter a new term into the search bar"
         />
       </div>
 
       {products?.length > 0 && (
         <PageNavigation
+          sortOrder={sortOrder}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           productCount={productCount}

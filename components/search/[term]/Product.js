@@ -7,6 +7,7 @@ import {
   HeartIcon as HeartIconSolid,
   MinusIcon,
   PlusIcon,
+  TagIcon,
 } from '@heroicons/react/solid';
 import { HeartIcon as HeartIconOutline, PlusCircleIcon } from '@heroicons/react/outline';
 import { Transition } from '@headlessui/react';
@@ -102,6 +103,13 @@ export default function Product({ product, items, favourites }) {
           className="rounded-t-md flex-1 flex flex-col justify-start text-left focus:outline-none focus:ring-2 focus:ring-sky-600 focus:z-1 transition"
           onClick={() => setIsShowingDetailedProductModal(true)}
         >
+          {product.isSponsoredAd && (
+            <div className="absolute top-1 left-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 opacity-85">
+                <TagIcon className="w-3.5 h-3.5 mr-0.5" /> Sponsored
+              </span>
+            </div>
+          )}
           <img
             src={product.mediumImageFile}
             alt={product.name}
