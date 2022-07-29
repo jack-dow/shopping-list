@@ -1,3 +1,7 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "@jdow",
+  "rules": {
+    "arrow-parens": ["error", "always"],
+    "@typescript-eslint/brace-style": ["off"]
+  }
 }
